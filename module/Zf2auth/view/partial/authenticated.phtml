@@ -1,0 +1,51 @@
+<?php
+if (!empty($getIdentity)) {
+    $nameString = $userData->username;
+    $nameString = (strlen($nameString) > 14) ? substr($nameString, 0, 11) . '...' : $nameString;
+
+        ?>
+        <div class="row">
+            <div class="pull-right">
+                <div class="dropdown">
+                    <div class="btn-group dropdown mrg-top-10" id="dLabel" data-toggle="dropdown">
+                        <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-user"></span></button>
+                        <button type="button" class="btn btn-default">My Account &nbsp;&nbsp;&nbsp;<span class="caret"></span> </button>
+                    </div>
+                    <!--                <a class="btn btn-default" id="dLabel" role="button" data-toggle="dropdown" data-target="#" href="/page.html">
+                                        <span class="glyphicon glyphicon-user"></span>
+                                    </a>-->
+                    <ul class="dropdown-menu pull-right rec-drop" role="menu" aria-labelledby="dLabel">
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo $this->url('home'); ?>">My Account</a></li>
+                        <li role="presentation" class="divider"></li>
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo $this->url('users/logout'); ?>">Logout</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <?php
+/*
+        ?>
+        <div class="pull-right white">
+            <?php
+            echo "Welcome, " . $nameString;
+            ?>
+            | <a href="<?php echo $this->basePath('/users/logout'); ?>">Logout</a>
+        </div>
+        <?php
+    */
+} else {
+    ?>
+    <div class='header-form'>
+        <div class="pull-right">
+            <div class="btn-group dropup mrg-top-10">
+                <a type="button" class="btn btn-default" id="loginbtn" href="<?php echo $this->url('users/login'); ?>"><span class="glyphicon glyphicon-user"></span></a>
+                <a type="button" class="btn btn-default" id="loginbtn" href="<?php echo $this->url('users/login'); ?>">User Log In</a>
+            </div>
+        </div>
+    </div>
+    <?php
+}
+?>
+<!-- Button trigger modal -->
+
