@@ -33,7 +33,7 @@ class RoleResourcesController extends Zf2authAppController
 
     public function searchAction()
     {
-        $this->layout('layout/ajax');
+        
         $request = $this->getRequest();
 
         $url = 'index';

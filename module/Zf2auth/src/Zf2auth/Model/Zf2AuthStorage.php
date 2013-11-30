@@ -27,6 +27,7 @@ class Zf2AuthStorage extends Storage\Session {
 //            echo "<pre>";
 //            print_r($storage);
 //            echo "</pre>";
+//            die();
             if (!empty($storage)) {
                 return $storage['role_name'];
 //                return 'Administrator';

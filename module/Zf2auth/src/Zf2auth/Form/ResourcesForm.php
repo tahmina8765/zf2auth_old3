@@ -14,25 +14,18 @@ class ResourcesForm extends Form
 
 
 
-        
+
         $id = new Element\Hidden('id');
         $id->setAttribute('class', 'primarykey');
 
-        $csrf = new Element\Csrf('csrf');
-        $csrf_options  = array (
-            'csrf_options' => array (
-                'timeout' => 1000
-            )
-        );
-        $csrf->setOptions($csrf_options);
-    
-	
+
+
         $name = new Element\Text('name');
         $name->setLabel('Name')
                 ->setAttribute('class', 'required form-control')
                 ->setAttribute('id', 'name')
                 ->setAttribute('placeholder', 'Name');
-        
+
 
 
 
@@ -41,13 +34,11 @@ class ResourcesForm extends Form
                 ->setAttribute('class', 'btn btn-primary');
 
         $this->add($id);
-        $this->add($csrf);
         $this->add($name);
-	
+
 
 
     }
 }
 
 
-    

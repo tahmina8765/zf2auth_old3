@@ -1,9 +1,8 @@
 <?php
+
 namespace Zf2auth\Table;
 
 use Zend\Db\TableGateway\TableGateway;
-
-
 use Zend\Db\TableGateway\AbstractTableGateway;
 use Zend\Db\Adapter\Adapter;
 use Zend\Db\ResultSet\ResultSet;
@@ -13,16 +12,17 @@ use Zend\Paginator\Adapter\DbSelect;
 use Zend\Paginator\Paginator;
 use Zf2auth\Entity\RoleResources;
 
-class RoleResourcesTable extends AbstractTableGateway
-{
+class RoleResourcesTable extends AbstractTableGateway {
+
     protected $table = 'role_resources';
 
     public function __construct(Adapter $adapter) {
-        $this->adapter = $adapter;
+        $this->adapter            = $adapter;
         $this->resultSetPrototype = new ResultSet();
         $this->resultSetPrototype->setArrayObjectPrototype(new RoleResources());
 
         $this->initialize();
+
     }
 
     public function fetchAll(Select $select = null, $paginated = false) {
@@ -41,32 +41,31 @@ class RoleResourcesTable extends AbstractTableGateway
             $resultSet->buffer();
             return $resultSet;
         }
+
     }
 
-
     public function getRoleResources($id) {
-        $id = (int) $id;
-        $rowset = $this->select(array('id' => $id));
-        $row = $rowset->current();
+        $id     = (int) $id;
+        $rowset = $this->select(array ('id' => $id));
+        $row    = $rowset->current();
         if (!$row) {
             return false;
         }
         return $row;
+
     }
 
-    public function saveRoleResources(RoleResources $role_resources)
-    {
-        $result = array(
-            'status' => 0,
+    public function saveRoleResources(RoleResources $role_resources) {
+        $result = array (
+            'status'  => 0,
             'message' => ''
         );
-        $data = array(
-            'role_id' => $role_resources->role_id,
-		'resource_id' => $role_resources->resource_id,
-		
+        $data   = array (
+            'role_id'     => $role_resources->role_id,
+            'resource_id' => $role_resources->resource_id,
         );
 
-        $id = (int)$role_resources->id;
+        $id = (int) $role_resources->id;
         if ($id == 0) {
             unset($data['modified_by']);
             unset($data['modified']);
@@ -75,28 +74,28 @@ class RoleResourcesTable extends AbstractTableGateway
             if ($this->getRoleResources($id)) {
                 unset($data['created_by']);
                 unset($data['created']);
-                $result['status'] = $this->update($data, array('id' => $id));
+                $result['status'] = $this->update($data, array ('id' => $id));
             } else {
                 $result['message'] = 'ID does not exist';
             }
         }
 
         return $result;
+
     }
 
-    public function deleteRoleResources($id)
-    {
-        $result = array(
-            'status' => 0,
+    public function deleteRoleResources($id) {
+        $result = array (
+            'status'  => 0,
             'message' => ''
         );
-        try{
-            $result['status'] = $this->delete(array('id' => $id));
-
-            }catch(\Exception $e){
+        try {
+            $result['status'] = $this->delete(array ('id' => $id));
+        } catch (\Exception $e) {
             $result['message'] = 'Information can not be deleted.';
-            }
-            return $result;
+        }
+        return $result;
+
     }
 
     public function dropdownRoles(Select $select = null) {
@@ -115,5 +114,28 @@ class RoleResourcesTable extends AbstractTableGateway
         return $options;
 
     }
+
+    public function getResourcesBasedOnRole($role_id)
+    {
+        $adapter = $this->adapter;
+        $select  = new Select();
+        $select->from($this->table);
+
+        $select->join('resources', 'resources.id = role_resources.resource_id', array('resource_name' => 'name'), 'left');
+        $select->where('role_id =' . $role_id);
+        // $resultSet = $this->selectWith($select);
+//        echo $role_id;
+//        echo $select->getSqlString();
+//        die();
+        $sql       = new Sql($adapter);
+        $statement = $sql->getSqlStringForSqlObject($select);
+        $resultSet = $adapter->query($statement, $adapter::QUERY_MODE_EXECUTE);
+        $resultSet->buffer();
+
+
+        return $resultSet;
+    }
+
+
 }
-            
+

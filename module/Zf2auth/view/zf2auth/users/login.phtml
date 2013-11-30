@@ -1,0 +1,84 @@
+<?php
+$title   = 'Please sign in';
+?>
+<style type="text/css">
+    .form-signin {
+        max-width: 330px;
+        padding: 15px;
+        margin: 0 auto;
+    }
+    .form-signin .form-signin-heading,
+    .form-signin .checkbox {
+        margin-bottom: 10px;
+    }
+    .form-signin .checkbox {
+        font-weight: normal;
+    }
+    .form-signin .form-control {
+        position: relative;
+        font-size: 16px;
+        height: auto;
+        padding: 10px;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+    }
+    .form-signin .form-control:focus {
+        z-index: 2;
+    }
+    .form-signin input[type="text"] {
+        margin-bottom: -1px;
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+    .form-signin input[type="password"] {
+        margin-bottom: 10px;
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+    }
+    input[type='checkbox']{
+        margin-top: 0px;
+    }
+</style>
+<div class="container">
+
+    <?php
+    $form    = $this->form;
+    $form->setAttribute('action', $this->url('users/authenticate'));
+    $form->prepare();
+    echo $this->form()->openTag($form);
+//    $allname = array ();
+//    foreach ($form as $element) :
+//        $name      = $element->getAttribute('id');
+//        $allname[] = $name;
+//        $$name     = $element;
+//    endforeach;
+    ?>
+    <h2 class="form-signin-heading"><?php echo $this->escapeHtml($title); ?></h2>
+
+    <?php echo $this->partial('zf2auth/elements/message.phtml', array ('flashMessages' => $this->flashMessages, 'error'         => $this->error)); ?>
+    <?php
+
+    foreach ($form as $element) :
+        ?>
+        <div class="control-group <?php if ($this->formElementErrors($element)) echo "error"; ?>">
+    <!--                <label class="control-label" style="text-align: left;"><?php // echo $element->getLabel();   ?></label>-->
+            <div style="text-align: left;">
+                <?php
+                echo $this->formElement($element);
+                if ($this->formElementErrors($element)):
+                    ?>
+                    <span class="help-inline"><?php echo $this->formElementErrors($element); ?></span>
+                    <?php
+                endif;
+                ?>
+            </div>
+        </div>
+        <?php
+    endforeach;
+    echo $this->form()->closeTag();
+    ?>
+</div>
+
+
+

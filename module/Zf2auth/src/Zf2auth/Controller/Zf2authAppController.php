@@ -3,23 +3,70 @@
 namespace Zf2auth\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
-use Zend\Db\Sql\Select;
-use Zend\Paginator\Paginator;
-use Zend\Paginator\Adapter\Iterator as paginatorIterator;
 
 class Zf2authAppController extends AbstractActionController {
 
     protected $resourcesTable;
-    protected $role_resourcesTable;
+    protected $roleResourcesTable;
     protected $rolesTable;
-    protected $user_rolesTable;
+    protected $userRolesTable;
     protected $usersTable;
+
+    protected $routerConfig;
+    protected $currentUser;
+    public $storage;
+    public $authservice;
     public $message;
 
     public function __construct() {
-        $this->message = new \Zend\Config\Config(include __DIR__.'../../../../config/message.config.php');
+        $this->message = new \Zend\Config\Config(include __DIR__ . '../../../../config/message.config.php');
 //        parent::__construct();
+
+    }
+
+    /**
+     *
+     * @return type
+     */
+    public function getSessionStorage() {
+        if (!$this->storage) {
+            $this->storage = $this->getServiceLocator()->get('Zf2auth\Model\Zf2AuthStorage');
+        }
+
+        return $this->storage;
+
+    }
+
+    /**
+     *
+     * @return type
+     */
+    public function getAuthService() {
+        if (!$this->authservice) {
+            $this->authservice = $this->getServiceLocator()->get('AuthService');
+        }
+        return $this->authservice;
+
+    }
+
+    /**
+     * Get Current User
+     * @return type
+     */
+    protected function getCurrentUser() {
+        $this->currentUser = false;
+        if ($this->getAuthService()->hasIdentity()) {
+            $this->currentUser = $this->getAuthService()->getIdentity();
+        }
+        return $this->currentUser;
+    }
+
+    protected function getRouterConfig() {
+        if (!$this->routerConfig) {
+            $sm                 = $this->getServiceLocator();
+            $this->routerConfig = $sm->get('RouterConfig');
+        }
+        return $this->routerConfig;
 
     }
 
@@ -33,11 +80,11 @@ class Zf2authAppController extends AbstractActionController {
     }
 
     protected function getRoleResourcesTable() {
-        if (!$this->role_resourcesTable) {
+        if (!$this->roleResourcesTable) {
             $sm                        = $this->getServiceLocator();
-            $this->role_resourcesTable = $sm->get('Zf2auth\Table\RoleResourcesTable');
+            $this->roleResourcesTable = $sm->get('Zf2auth\Table\RoleResourcesTable');
         }
-        return $this->role_resourcesTable;
+        return $this->roleResourcesTable;
 
     }
 
@@ -51,11 +98,11 @@ class Zf2authAppController extends AbstractActionController {
     }
 
     protected function getUserRolesTable() {
-        if (!$this->user_rolesTable) {
+        if (!$this->userRolesTable) {
             $sm                    = $this->getServiceLocator();
-            $this->user_rolesTable = $sm->get('Zf2auth\Table\UserRolesTable');
+            $this->userRolesTable = $sm->get('Zf2auth\Table\UserRolesTable');
         }
-        return $this->user_rolesTable;
+        return $this->userRolesTable;
 
     }
 

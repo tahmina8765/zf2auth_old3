@@ -4,7 +4,7 @@ namespace Zf2auth;
 return array(
     'controllers' => array(
         'invokables' => array(
-            
+            'Zf2auth\Controller\Zf2auth' => 'Zf2auth\Controller\Zf2authController',
             'Zf2auth\Controller\Resources' => 'Zf2auth\Controller\ResourcesController',
             'Zf2auth\Controller\RoleResources' => 'Zf2auth\Controller\RoleResourcesController',
             'Zf2auth\Controller\Roles' => 'Zf2auth\Controller\RolesController',
@@ -14,6 +14,23 @@ return array(
     ),
     'router' => array(
         'routes' => array(
+            'zf2auth'        => array (
+                'type'    => 'segment',
+                'options' => array (
+                    'route'       => '/zf2auth[/:action][/:id][/page/:page][/order_by/:order_by][/:order][/search_by/:search_by]',
+                    'constraints' => array (
+                        'action'   => '(?!\bpage\b)(?!\border_by\b)(?!\bsearch_by\b)[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id'       => '[0-9]+',
+                        'page'     => '[0-9]+',
+                        'order_by' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'order'    => 'ASC|DESC',
+                    ),
+                    'defaults'    => array (
+                        'controller' => 'Zf2auth\Controller\Zf2auth',
+                        'action'     => 'index',
+                    ),
+                ),
+            ),
             'resources'          => array (
                 'type'          => 'segment',
                 'options'       => array (
@@ -85,6 +102,15 @@ return array(
                             ),
                             'defaults' => array (
                                 'action' => 'delete',
+                            ),
+                        ),
+                    ),
+                    'refreshResources'             => array (
+                        'type'    => 'segment',
+                        'options' => array (
+                            'route'    => '/refresh-resources',
+                            'defaults' => array (
+                                'action' => 'refreshResources',
                             ),
                         ),
                     ),
@@ -383,23 +409,92 @@ return array(
                             'route'    => '/delete[/:id]',
                             'constraints' => array (
                                 'id'       => '[0-9]+',
-                                'page'     => '[0-9]+',
-                                'order_by' => '[a-zA-Z][a-zA-Z0-9_-]*',
-                                'order'    => 'ASC|DESC',
                             ),
                             'defaults' => array (
                                 'action' => 'delete',
                             ),
                         ),
                     ),
+                    'registration'    => array (
+                        'type'    => 'segment',
+                        'options' => array (
+                            'route'    => '/registration',
+                            'defaults' => array (
+                                'action' => 'registration',
+                            ),
+                        ),
+                    ),
+                    'login'           => array (
+                        'type'    => 'segment',
+                        'options' => array (
+                            'route'    => '/login',
+                            'defaults' => array (
+                                'action' => 'login',
+                            ),
+                        ),
+                    ),
+                    'logout'          => array (
+                        'type'    => 'segment',
+                        'options' => array (
+                            'route'    => '/logout',
+                            'defaults' => array (
+                                'action' => 'logout',
+                            ),
+                        ),
+                    ),
+                    'authenticate'    => array (
+                        'type'    => 'segment',
+                        'options' => array (
+                            'route'    => '/authenticate',
+                            'defaults' => array (
+                                'action' => 'authenticate',
+                            ),
+                        ),
+                    ),
+                    'confirmEmail'    => array (
+                        'type'    => 'segment',
+                        'options' => array (
+                            'route'    => '/confirmEmail[/:id][/:email_check_code]',
+                            'defaults' => array (
+                                'action' => 'confirmEmail',
+                            ),
+                        ),
+                    ),
+                    'forget-password' => array (
+                        'type'    => 'segment',
+                        'options' => array (
+                            'route'    => '/forget-password',
+                            'defaults' => array (
+                                'action' => 'forgetPassword',
+                            ),
+                        ),
+                    ),
+                    'reset-password'  => array (
+                        'type'    => 'segment',
+                        'options' => array (
+                            'route'    => '/reset-password[/:id][/:password_access_tocken]',
+                            'defaults' => array (
+                                'action' => 'resetPassword',
+                            ),
+                        ),
+                    ),
+                    'change-password' => array (
+                        'type'    => 'segment',
+                        'options' => array (
+                            'route'    => '/change-password',
+                            'defaults' => array (
+                                'action' => 'changePassword',
+                            ),
+                        ),
+                    ),
                 ),
             ),
-            
+
         ),
     ),
     'view_manager' => array(
         'template_path_stack' => array(
-            
+
             'resources' => __DIR__ . '/../view',
             'role_resources' => __DIR__ . '/../view',
             'roles' => __DIR__ . '/../view',
